@@ -58,18 +58,21 @@
 
 
 <meta name="description" content="去年三月份来帝都，荣幸的加入了老东家FitTime睿健时代的Android团队，阴差阳错的分到了图像处理的相关模块。此后的很长一段时间都在和各种View啊，Canvas啊，Bitmap啊，Metrix啊厮混，相爱相杀。踩过好多的坑，换过好多种实现方法，最后确定了现在的方案，希望能给需要的你提供一个思路。
-View生命周期相关方法View是什么？官方源码注释中的定义：这个类是用户接口的基础构件。V">
+
+View生命周期相关方法View是什么？官方源码注释中的定义：这个类是用户接口的基础构件。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android图像处理之View的生命周期">
 <meta property="og:url" content="http://yoursite.com/2016/03/07/Android图像处理之View的生命周期/index.html">
 <meta property="og:site_name" content="Aurora">
 <meta property="og:description" content="去年三月份来帝都，荣幸的加入了老东家FitTime睿健时代的Android团队，阴差阳错的分到了图像处理的相关模块。此后的很长一段时间都在和各种View啊，Canvas啊，Bitmap啊，Metrix啊厮混，相爱相杀。踩过好多的坑，换过好多种实现方法，最后确定了现在的方案，希望能给需要的你提供一个思路。
-View生命周期相关方法View是什么？官方源码注释中的定义：这个类是用户接口的基础构件。V">
-<meta property="og:updated_time" content="2016-03-09T08:25:35.691Z">
+
+View生命周期相关方法View是什么？官方源码注释中的定义：这个类是用户接口的基础构件。">
+<meta property="og:updated_time" content="2016-03-09T08:29:54.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android图像处理之View的生命周期">
 <meta name="twitter:description" content="去年三月份来帝都，荣幸的加入了老东家FitTime睿健时代的Android团队，阴差阳错的分到了图像处理的相关模块。此后的很长一段时间都在和各种View啊，Canvas啊，Bitmap啊，Metrix啊厮混，相爱相杀。踩过好多的坑，换过好多种实现方法，最后确定了现在的方案，希望能给需要的你提供一个思路。
-View生命周期相关方法View是什么？官方源码注释中的定义：这个类是用户接口的基础构件。V">
+
+View生命周期相关方法View是什么？官方源码注释中的定义：这个类是用户接口的基础构件。">
 
 
 
@@ -277,8 +280,8 @@ View生命周期相关方法View是什么？官方源码注释中的定义：这
       
         <blockquote>
 <p>去年三月份来帝都，荣幸的加入了老东家FitTime睿健时代的Android团队，阴差阳错的分到了图像处理的相关模块。<br>此后的很长一段时间都在和各种View啊，Canvas啊，Bitmap啊，Metrix啊厮混，相爱相杀。<br>踩过好多的坑，换过好多种实现方法，最后确定了现在的方案，希望能给需要的你提供一个思路。</p>
-<h3 id="View生命周期相关方法"><a href="#View生命周期相关方法" class="headerlink" title="View生命周期相关方法"></a>View生命周期相关方法</h3><p>View是什么？官方源码注释中的定义：这个类是用户接口的基础构件。View表示屏幕上的一块矩形区域，负责绘制这个区域和事件处理。<br>View是所有widget类的基类，Widget类用于创建交互式UI构件（按钮，输入框等）。<br>View类的ViewGroup子类是layout的基类，Layout是一个不可见的容器，它保存着View（或ViewGroup）并定义这些View的layout 属性。</p>
 </blockquote>
+<h3 id="View生命周期相关方法"><a href="#View生命周期相关方法" class="headerlink" title="View生命周期相关方法"></a>View生命周期相关方法</h3><p>View是什么？官方源码注释中的定义：这个类是用户接口的基础构件。View表示屏幕上的一块矩形区域，负责绘制这个区域和事件处理。<br>View是所有widget类的基类，Widget类用于创建交互式UI构件（按钮，输入框等）。<br>View类的ViewGroup子类是layout的基类，Layout是一个不可见的容器，它保存着View（或ViewGroup）并定义这些View的layout 属性。</p>
 <p>简单点说，View就是屏幕上的一块矩形区域，我们可以在这块区域绘制我们想让用户看到的图形。</p>
 <p>关于View的生命周期，官方源码注释中有详细的描述，作为英语六级勉强飘过的选手，我顶着巨大的压力翻译了一下。</p>
 <ol>
@@ -362,8 +365,8 @@ View生命周期相关方法View是什么？官方源码注释中的定义：这
 <li>绘制View的content（onDraw()），只有可见的View才在window中绘制。</li>
 <li>View的销毁流程和可见性没有关系。</li>
 </ol>
-<p>综上所述：View的关键生命周期为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[改变可见性] --&gt; 构造View() --&gt; onFinishInflate() --&gt; onAttachedToWindow() --&gt; onMeasure() --&gt; onSizeChanged() --&gt; onLayout() --&gt; onDraw() --&gt; onDetackedFromWindow()</span><br></pre></td></tr></table></figure></p>
-<p>自定义View时我们不可避免的要和View生命周期相关函数打交道，可能需要重新其中的某个或某几个来满足定制的需求，<br>因此了解View的生命周期是Android程序猿进阶的必经之路。当然，我们没必要重新所有的方法，如果我们只是单纯的想<br>把一个Bitmap画到View上，那我们只要重写View的onDraw方法就可以了，事实上自定义View的大部分情况我们也只是<br>关注这个方法。onDraw方法的入口参数是android.graphics.Canvas，如何把文字、图像等绘制到View上就要了解这<br>个类，下一篇我们一起了解一下。</p>
+<p>综上所述：View的关键生命周期为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[改变可见性] --&gt; 构造View() --&gt; onFinishInflate() --&gt; onAttachedToWindow() --&gt; onMeasure() --&gt; onSizeChanged() --&gt; onLayout() --&gt; onDraw() --&gt; onDetackedFromWindow()</span><br></pre></td></tr></table></figure></p>
+<p>自定义View时我们不可避免的要和View生命周期相关函数打交道，可能需要重新其中的某个或某几个来满足定制的需求，因此了解View的生命周期是Android程序猿进阶的必经之路。当然，我们没必要重新所有的方法，如果我们只是单纯的想把一个Bitmap画到View上，那我们只要重写View的onDraw方法就可以了，事实上自定义View的大部分情况我们也只是关注这个方法。onDraw方法的入口参数是android.graphics.Canvas，如何把文字、图像等绘制到View上就要了解这个类，下一篇我们一起了解一下。</p>
 
       
     </div>
