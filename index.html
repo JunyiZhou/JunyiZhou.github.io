@@ -284,7 +284,41 @@
       
         
           
-            
+            <blockquote>
+<p>上一篇我们了解了View生命周期的相关方法和调用流程，其中最重要的onDraw方法是自定义View的重要基石。而其中的Canvas参数则至关重要。</p>
+</blockquote>
+<p>Android官方源码中对Canvas的描述是：“Canvas类容纳所有和Draw（绘制）相关方法。为了去Draw些东西，你需要具备4个基础要素：1个Bitmap用来承载像素信息，1个Canvas用来管理Draw相关方法（写入Bitmap中），1个绘图基元（例如，Rect，Path，text，Bitmap），1个画笔（用于描绘图像的颜色和风格）。</p>
+<p>这和我们日常理解的绘画异曲同工，Bitmap作为画布，Canvas管理着绘画的手法，绘图基元代表着要绘制的目标，Paint就是你手里的画笔和颜料。</p>
+<h3 id="如何得到1个Canvas对象"><a href="#如何得到1个Canvas对象" class="headerlink" title="如何得到1个Canvas对象"></a>如何得到1个Canvas对象</h3><ol>
+<li>之前提到的onDraw方法的入口参数就是Canvas，我们用变量承载它，就可以使用，而我们操作这个Canvas最终的效果会直接反应在这个View上。</li>
+<li>SurfaceView是View的继承了，其内部有专门的线程来完成画图的工作，而不用像View一样需要等待刷新，主要用在游戏和高品质动画方面。既然是View的继承类，SurfaceView自然可以获取到Canvas的对象，方式是通过调用SurfaceView的好基友SurfaceHolder的lockCanvas()方法。</li>
+<li>当然，除了获取View或SurfaceView自带的现成的Canvas对象，我们还可以自己创建。从4大基本要素我们就可以知道，1个Canvas对象一定要结合1个Bitmap对象。所以一定要为新建的Canvas对象设置1个Bitmap对象。<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 得到一个Bitmap对象，当然也可以使用别的方式得到。但是要注意，改bitmap一定要是mutable(异变的)</span><br><span class="line"> * mutable : 易变的，不定的</span><br><span class="line"> * mutable 作用 ：  控制bitmap的setPixel方法能否使用，也就是外界能否修改bitmap的像素。</span><br><span class="line"> * Bitmap.createBitmap(mWidth, mHeight, Config.ARGB_8888) 为 mutable 为true</span><br><span class="line"> * BimapFactory.decodeResource() 得到的mutable 为false, 要想其为true</span><br><span class="line"> * 一般会BimtapFactory.decodeResource().copy(configu_argb_8888, true);</span><br><span class="line"> * 先new一个Canvas对象，在调用setBitmap方法，一样的效果</span><br><span class="line"> * Canvas c = new Canvas();</span><br><span class="line"> * c.setBitmap(b);</span><br><span class="line"> */</span></span><br><span class="line">Bitmap b = Bitmap.createBitmap(<span class="number">100</span>, <span class="number">100</span>, Bitmap.Config.ARGB_8888);</span><br><span class="line">Canvas canvas2 = <span class="keyword">new</span> Canvas(b);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Canvas能画些什么"><a href="#Canvas能画些什么" class="headerlink" title="Canvas能画些什么"></a>Canvas能画些什么</h3><p>Canvas类提供了若干draw……的方法，从字面上我们就可以知道用这些方法我们可以绘制哪些东西。</p>
+<h4 id="填充"><a href="#填充" class="headerlink" title="填充"></a>填充</h4><p>Canvas内部维持了一个mutable Bitmap，所以我们可以用颜色来填充整个Bitmap。而填充的范围受限于clip的范围。</p>
+<ul>
+<li>drawRGB(int r, int g, int b)：r-红色要素（0~255），g-绿色要素（0~255），b-蓝色要素（0~255）。</li>
+<li>drawARGB(int a, int r, int g, int b)：a-透明度（0~255），r-红色要素（0~255），g-绿色要素（0~255），b-蓝色要素（0~255）。</li>
+<li>drawColor(int color)：这里的color要为16进制的颜色号，例如：0xFF000000，共8位，两位一组从左到右分别为ARGB，具体含义同上。若要使用“#FF000000”这样的色号，可以调用Color.parseColor(String colorString)方法来进行转换。</li>
+<li>drawColor(int color, PorterDuff.Mode mode)：color同上，PorterDuff.Mode比较有意思，有很多种模式，每一种模式都会有特定的效果，感兴趣的朋友可以自行了解一下。</li>
+<li>drawPaint(Paint paint)：Canvas同样可以用画笔来填充Bitmap，当然也受限于clip的范围。<h4 id="绘制图形"><a href="#绘制图形" class="headerlink" title="绘制图形"></a>绘制图形</h4></li>
+<li>canvas.drawArc （扇形）</li>
+<li>canvas.drawCircle（圆）</li>
+<li>canvas.drawOval（椭圆）</li>
+<li>canvas.drawLine（线）</li>
+<li>canvas.drawPoint（点）</li>
+<li>canvas.drawRect（矩形）</li>
+<li>canvas.drawRoundRect（圆角矩形）</li>
+<li>canvas.drawVertices（顶点）</li>
+<li>cnavas.drawPath（路径）<h4 id="绘制图片"><a href="#绘制图片" class="headerlink" title="绘制图片"></a>绘制图片</h4></li>
+<li>canvas.drawBitmap（位图）</li>
+<li>canvas.drawPicture（图片）<h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4></li>
+<li>canvas.drawText<h3 id="Canvas的变换"><a href="#Canvas的变换" class="headerlink" title="Canvas的变换"></a>Canvas的变换</h3>Canvas不仅仅可以draw一些图形、图片，其本身也提供了可操作的方法：rorate(旋转)、scale(压缩)、translate(平移)、skew(扭曲)等。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onDraw(Canvas canvas) &#123;</span><br><span class="line">    super.onDraw(canvas);</span><br><span class="line"></span><br><span class="line">    canvas.drawRect(new Rect(0, 0, 200, 200), new Paint());</span><br><span class="line">    canvas.scale(0.5f, 0.5f);//缩放了</span><br><span class="line">    canvas.drawRect(new Rect(400, 400, 600, 600), new Paint());</span><br><span class="line"></span><br><span class="line">    canvas.translate(600, 600);//平移了</span><br><span class="line">    canvas.rotate(45);//旋转了</span><br><span class="line">    canvas.drawRect(new Rect(0, 0, 200, 200), new Paint());</span><br><span class="line"></span><br><span class="line">    canvas.translate(200, 200);</span><br><span class="line">    canvas.skew(.5f, .5f);//扭曲了</span><br><span class="line">    canvas.drawRect(new Rect(0, 0, 200, 200), new Paint());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Canvas的保存和回滚"><a href="#Canvas的保存和回滚" class="headerlink" title="Canvas的保存和回滚"></a>Canvas的保存和回滚</h3><p>为了配合Canvas本身的变换操作，Canvas提供了保持当前状态和回滚的方法。来个小例子。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected <span class="keyword">void</span> onDraw(Canvas canvas) &#123;</span><br><span class="line">    <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; <span class="number">360</span>; i = i + <span class="number">3</span>) &#123;</span><br><span class="line">        canvas.save();</span><br><span class="line">        canvas.rotate(i, <span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">        canvas.drawLine(<span class="number">100</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">10</span>, <span class="keyword">new</span> Paint());</span><br><span class="line">        canvas.restore();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
           
         
       
