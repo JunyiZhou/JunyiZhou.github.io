@@ -57,16 +57,24 @@
 
 
 
-<meta name="description" content="陷阵之志，有死无生">
+<meta name="description" content="Canvas类中drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint)方法中有个参数类型是Matrix，从字面上理解是矩阵的意思，而实际上它也确实是个3x3的矩阵。Matrix在Android中的主要作用是图像变换，如平移、旋转、缩放、扭曲等。
+
+Matrix内部通过维护一个float[9]的数组来构成3x3矩阵的形式，而实际上所有的变换方法说">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android图像处理之Matrix">
 <meta property="og:url" content="http://yoursite.com/2016/03/16/Android图像处理之Matrix/index.html">
 <meta property="og:site_name" content="胡周八扯">
-<meta property="og:description" content="陷阵之志，有死无生">
-<meta property="og:updated_time" content="2016-03-16T07:44:06.778Z">
+<meta property="og:description" content="Canvas类中drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint)方法中有个参数类型是Matrix，从字面上理解是矩阵的意思，而实际上它也确实是个3x3的矩阵。Matrix在Android中的主要作用是图像变换，如平移、旋转、缩放、扭曲等。
+
+Matrix内部通过维护一个float[9]的数组来构成3x3矩阵的形式，而实际上所有的变换方法说">
+<meta property="og:image" content="http://yoursite.com/images/blog-20160316-1.png">
+<meta property="og:updated_time" content="2016-04-05T09:37:39.229Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android图像处理之Matrix">
-<meta name="twitter:description" content="陷阵之志，有死无生">
+<meta name="twitter:description" content="Canvas类中drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint)方法中有个参数类型是Matrix，从字面上理解是矩阵的意思，而实际上它也确实是个3x3的矩阵。Matrix在Android中的主要作用是图像变换，如平移、旋转、缩放、扭曲等。
+
+Matrix内部通过维护一个float[9]的数组来构成3x3矩阵的形式，而实际上所有的变换方法说">
+<meta name="twitter:image" content="http://yoursite.com/images/blog-20160316-1.png">
 
 
 
@@ -272,7 +280,34 @@
       
 
       
-        
+        <blockquote>
+<p>Canvas类中drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint)方法中有个参数类型是Matrix，从字面上理解是矩阵的意思，而实际上它也确实是个3x3的矩阵。Matrix在Android中的主要作用是图像变换，如平移、旋转、缩放、扭曲等。</p>
+</blockquote>
+<p>Matrix内部通过维护一个float[9]的数组来构成3x3矩阵的形式，而实际上所有的变换方法说到底就是通过更改数组中某个或某几个位置的数值。Matrix提供了setValues()和getValues()方法来操作数组。<br><img src="/images/blog-20160316-1.png" alt=""><br>显然这两个方法使用起来很不方便，如果只有这样，那Matrix估计就不会有人使用了。Google轻易不会辜负我们的信任，Matrix提供了若干简单易用的变换方法和映射方法供开发者使用。</p>
+<h3 id="Matrix变换方法"><a href="#Matrix变换方法" class="headerlink" title="Matrix变换方法"></a>Matrix变换方法</h3><p>Matrix提供了Translate(平移)、Scale(缩放)、Rotate(旋转)、Skew(扭曲)四中变换操作，这四种操作实质上是调用了setValues()方法来设置矩阵数组来达到变换效果。除Translate(平移)外，Scale(缩放)、Rotate(旋转)、Skew(扭曲)都可以围绕一个中心点来进行，如果不指定，在默认情况下是围绕(0, 0)来进行相应的变换的。<br>Matrix提供的四种操作，每一种都有pre、set、post三种形式。原因是矩阵乘法不满足乘法交换律，因此左乘还是右乘最终的效果都不一样。我们可以把Matrix变换想象成一个队列，队列里面包含了若干个变换操作，队列中每个操作按照先后顺序操作变换目标完成变换，pre相当于向队首增加一个操作，post相当于向队尾增加一个操作，set相当于清空当前队列重新设置。</p>
+<ul>
+<li><p>例1</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这段代码只有translate(100, 100)生效，因为第二个set会把之前队列中的操作清除。</span></span><br><span class="line">Matrix m = <span class="keyword">new</span> Matrix();</span><br><span class="line">m.setRotate(<span class="number">100</span>); </span><br><span class="line">m.setTranslate(<span class="number">100</span>, <span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例2</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这段代码先执行translate(100, 100)，后执行rotate(100)</span></span><br><span class="line">Matrix m = <span class="keyword">new</span> Matrix();</span><br><span class="line">m.setTranslate(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">m.postRotate(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例3</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这段代码先执行rotate(100)，后执行translate(100, 100)</span></span><br><span class="line">Matrix m = <span class="keyword">new</span> Matrix();</span><br><span class="line">m.setTranslate(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">m.preRotate(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例4</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这段代码的执行顺序：translate(100f, 100f) -&gt; scale(2f, 2f) -&gt; scale(0.5f, 0.5f) -&gt; translate(50f, 50f)</span></span><br><span class="line">Matrix m = <span class="keyword">new</span> Matrix();</span><br><span class="line">m.preScale(<span class="number">2</span>f, <span class="number">2</span>f);    </span><br><span class="line">m.preTranslate(<span class="number">100</span>f, <span class="number">100</span>f);   </span><br><span class="line">m.postScale(<span class="number">0.5</span>f, <span class="number">0.5</span>f);    </span><br><span class="line">m.postTranslate(<span class="number">50</span>f, <span class="number">50</span>f);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例5</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这段代码的执行顺序：translate(50f, 50f) -&gt; scale(0.8f, 0.8f) -&gt; scale(3f, 3f)</span></span><br><span class="line">Matrix m = <span class="keyword">new</span> Matrix();</span><br><span class="line">m.postTranslate(<span class="number">100</span>, <span class="number">100</span>);   </span><br><span class="line">m.preScale(<span class="number">0.5</span>f, <span class="number">0.5</span>f);</span><br><span class="line">m.setScale(<span class="number">0.8</span>f, <span class="number">0.8</span>f);   </span><br><span class="line">m.postScale(<span class="number">3</span>f, <span class="number">3</span>f);</span><br><span class="line">m.preTranslate(<span class="number">50</span>f, <span class="number">50</span>f);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Matrix-映射方法"><a href="#Matrix-映射方法" class="headerlink" title="Matrix 映射方法"></a>Matrix 映射方法</h3><p>Matrix提供了mapPoints()，mapRects()，mapVectors()等映射方法，用来获取经Matrix映射后的值。</p>
+<ul>
+<li>例<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这段代码的作用是获取经过平移后该bitmap四个点的坐标</span></span><br><span class="line">Matrix m = <span class="keyword">new</span> Matrix();</span><br><span class="line">m.postTranslate(<span class="number">100</span>f, <span class="number">100</span>f);</span><br><span class="line"></span><br><span class="line">float[] src = &#123;</span><br><span class="line">    <span class="number">0</span>, <span class="number">0</span>, </span><br><span class="line">    <span class="number">0</span>, bitmap.getHeight(), </span><br><span class="line">    bitmap.getWidth(), <span class="number">0</span>, </span><br><span class="line">    bitmap.getWidth(), bitmap.getHeight()</span><br><span class="line">&#125;;</span><br><span class="line">float[] dst = <span class="keyword">new</span> float[<span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">m.mapPoints(dst, src);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
       
     </div>
 
@@ -455,7 +490,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Matrix变换方法"><span class="nav-number">1.</span> <span class="nav-text">Matrix变换方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Matrix-映射方法"><span class="nav-number">2.</span> <span class="nav-text">Matrix 映射方法</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
