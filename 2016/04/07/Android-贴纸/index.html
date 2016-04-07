@@ -1,0 +1,774 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,贴纸," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="刚到老东家FitTime的时候正好赶上了team刚组建，大家每天都在对着IOS版本看需求，到开发启动那天就是谁看到哪就做哪，于是我就被分到了做图像处理的模块。其中最让人抓狂的是贴纸部分，每个贴纸要独立具备拖动、放大缩小、旋转翻转、删除等功能，当然这也是所有贴纸模块需要具备的基本要素，但是当时真是一穷二白，大家都不懂，网上也找不到好的解决方案，就只能硬着头皮去试验各种方法，最后发现只有自定义Vie">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 贴纸">
+<meta property="og:url" content="http://yoursite.com/2016/04/07/Android-贴纸/index.html">
+<meta property="og:site_name" content="胡周八扯">
+<meta property="og:description" content="刚到老东家FitTime的时候正好赶上了team刚组建，大家每天都在对着IOS版本看需求，到开发启动那天就是谁看到哪就做哪，于是我就被分到了做图像处理的模块。其中最让人抓狂的是贴纸部分，每个贴纸要独立具备拖动、放大缩小、旋转翻转、删除等功能，当然这也是所有贴纸模块需要具备的基本要素，但是当时真是一穷二白，大家都不懂，网上也找不到好的解决方案，就只能硬着头皮去试验各种方法，最后发现只有自定义Vie">
+<meta property="og:updated_time" content="2016-04-07T12:34:48.526Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 贴纸">
+<meta name="twitter:description" content="刚到老东家FitTime的时候正好赶上了team刚组建，大家每天都在对着IOS版本看需求，到开发启动那天就是谁看到哪就做哪，于是我就被分到了做图像处理的模块。其中最让人抓狂的是贴纸部分，每个贴纸要独立具备拖动、放大缩小、旋转翻转、删除等功能，当然这也是所有贴纸模块需要具备的基本要素，但是当时真是一穷二白，大家都不懂，网上也找不到好的解决方案，就只能硬着头皮去试验各种方法，最后发现只有自定义Vie">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Android 贴纸 | 胡周八扯 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?fb1f1d3a68c6107709ca2bb3cd896fe9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">胡周八扯</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Hello World</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android 贴纸
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-07T10:24:57+08:00" content="2016-04-07">
+              2016-04-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/07/Android-贴纸/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/07/Android-贴纸/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>刚到老东家FitTime的时候正好赶上了team刚组建，大家每天都在对着IOS版本看需求，到开发启动那天就是谁看到哪就做哪，于是我就被分到了做图像处理的模块。其中最让人抓狂的是贴纸部分，每个贴纸要独立具备拖动、放大缩小、旋转翻转、删除等功能，当然这也是所有贴纸模块需要具备的基本要素，但是当时真是一穷二白，大家都不懂，网上也找不到好的解决方案，就只能硬着头皮去试验各种方法，最后发现只有自定义View可以拯救我。准备把我的思路分享给各位，希望能有所帮助。因为我的解决方案是使用自定义View，所有对于View的生命周期、Canvas、Matrix等相关知识都需要有一定的了解，如果有对这些并不清楚的童鞋最好先去了解一下，这样能方便你更好的阅读接下来的内容，关于这些背景知识我之前的博客中也有介绍，感兴趣的各位可以看看。</p>
+</blockquote>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>了解过自定义View的童鞋 对Canvas.drawBitmap(Bitmap, Matrix, Paint)这个函数应该不会陌生，Bitmap的位置、大小、旋转角度、扭曲程度等都由Matrix来管理，而实现贴纸效果的就需要借助这个神奇的函数。我们可以通过很多种方法获取到贴纸的Bitmap，也可以很容易的定义绘制Bitmap所使用的Paint，那么剩下我们只需要关心怎样可以借助Matrix来让贴纸随着我们的指尖翩翩起舞。<br>为了更好的管理每个贴纸的Bitmap和Matrix信息，我简单的将二者进行了封装，大家不要在意名字，知道这个类是干嘛的就好了，毕竟如何起一个优雅准确的名字是一个世界性的难题。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageGroup</span> </span>&#123;</span><br><span class="line">    public Bitmap bitmap;</span><br><span class="line">    public Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//删除贴纸时释放资源时使用</span></span><br><span class="line">    public <span class="keyword">void</span> release() &#123;</span><br><span class="line">        <span class="keyword">if</span> (bitmap != <span class="literal">null</span>) &#123;</span><br><span class="line">            bitmap.recycle();</span><br><span class="line">            bitmap = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (matrix != <span class="literal">null</span>) &#123;</span><br><span class="line">            matrix.reset();</span><br><span class="line">            matrix = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>说到随着指尖，我们就会想到Android丰富的手势操作，因为是自定义View，所有对Bitmap的操作都需要用到手势触点坐标，因此我使用了View的onTouchEvent(MotionEvent event)方法直接对手势触点就行操作，onTouchEvent也是整个贴纸模块的核心。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;</span><br><span class="line">    <span class="keyword">switch</span> (event.getActionMasked()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            anchorX = event.getX();</span><br><span class="line">            anchorY = event.getY();</span><br><span class="line">            moveTag = decalCheck(anchorX, anchorY);</span><br><span class="line">            deleteTag = deleteCheck(anchorX, anchorY);</span><br><span class="line">            <span class="keyword">if</span> (moveTag != <span class="number">-1</span> &amp;&amp; deleteTag == <span class="number">-1</span>) &#123;</span><br><span class="line">                downMatrix.set(mDecalImageGroupList.get(moveTag).matrix);</span><br><span class="line">                mode = DRAG;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_POINTER_DOWN:</span><br><span class="line">            moveTag = decalCheck(event.getX(<span class="number">0</span>), event.getY(<span class="number">0</span>));</span><br><span class="line">            transformTag = decalCheck(event.getX(<span class="number">1</span>), event.getY(<span class="number">1</span>));</span><br><span class="line">            <span class="keyword">if</span> (moveTag != <span class="number">-1</span> &amp;&amp; transformTag == moveTag &amp;&amp; deleteTag == <span class="number">-1</span>) &#123;</span><br><span class="line">                downMatrix.set(mDecalImageGroupList.get(moveTag).matrix);</span><br><span class="line">                mode = ZOOM;</span><br><span class="line">            &#125;</span><br><span class="line">            oldDistance = getDistance(event);</span><br><span class="line">            oldRotation = getRotation(event);</span><br><span class="line">            midPoint = midPoint(event);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            <span class="keyword">if</span> (mode == ZOOM) &#123;</span><br><span class="line">                moveMatrix.set(downMatrix);</span><br><span class="line">                float newRotation = getRotation(event) - oldRotation;</span><br><span class="line">                float newDistance = getDistance(event);</span><br><span class="line">                float scale = newDistance / oldDistance;</span><br><span class="line">                moveMatrix.postScale(scale, scale, midPoint.x, midPoint.y);<span class="comment">// 缩放</span></span><br><span class="line">                moveMatrix.postRotate(newRotation, midPoint.x, midPoint.y);<span class="comment">// 旋转</span></span><br><span class="line">                <span class="keyword">if</span> (moveTag != <span class="number">-1</span>) &#123;</span><br><span class="line">                    mDecalImageGroupList.get(moveTag).matrix.set(moveMatrix);</span><br><span class="line">                &#125;</span><br><span class="line">                invalidate();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mode == DRAG) &#123;</span><br><span class="line">                moveMatrix.set(downMatrix);</span><br><span class="line">                moveMatrix.postTranslate(event.getX() - anchorX, event.getY() - anchorY);<span class="comment">// 平移</span></span><br><span class="line">                <span class="keyword">if</span> (moveTag != <span class="number">-1</span>) &#123;</span><br><span class="line">                    mDecalImageGroupList.get(moveTag).matrix.set(moveMatrix);</span><br><span class="line">                &#125;</span><br><span class="line">                invalidate();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="keyword">if</span> (deleteTag != <span class="number">-1</span>) &#123;</span><br><span class="line">                mDecalImageGroupList.remove(deleteTag).release();</span><br><span class="line">                invalidate();</span><br><span class="line">            &#125;</span><br><span class="line">            mode = NONE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_POINTER_UP:</span><br><span class="line">            mode = NONE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="手势操作"><a href="#手势操作" class="headerlink" title="手势操作"></a>手势操作</h3><p>onTouchEvent中我们使用了ACTION_DOWN、ACTION_POINTER_DOWN、ACTION_MOVE、ACTION_UP、ACTION_POINTER_UP五种事件，其中ACTION_DOWN和ACTION_UP、ACTION_POINTER_DOWN和ACTION_POINTER_UP分别对应。</p>
+<ul>
+<li>ACTION_DOWN和ACTION_UP：当View从无到有手指触摸，ACTION_DOWN会被触发，对应的ACTION_UP则为从有到无，也就是说只有当没有任何一根手指在触摸View时ACTION_UP才会被触发，ACTION_DOWN和ACTION_UP是整个手势操作生命周期的起点和终点。</li>
+<li>ACTION_POINTER_DOWN和ACTION_POINTER_UP：当View有多点触摸时ACTION_POINTER_DOWN会被触发，而当其中某个触点消失后ACTION_POINTER_UP会被触发。这里我们只考虑有两根手指触摸的情况。</li>
+<li>ACTION_MOVE：当View被触摸且该触摸点在移动时ACTION_MOVE会被触发，多点触摸时无论哪个点移动都会触发。</li>
+</ul>
+<p>Matrix的Translate(平移)外，Scale(缩放)、Rotate(旋转)、Skew(扭曲)四大操作除了Skew外我们都需要使用，对应到手势上我们通过单点触摸来控制Bitmap平移，通过多点触摸来控制Bitmap缩放和旋转，因此，在ACTION_MOVE阶段我们需要根据两种不同情况做区分。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int NONE = <span class="number">0</span>;<span class="comment">//无</span></span><br><span class="line">int DRAG = <span class="number">1</span>;<span class="comment">//平移模式</span></span><br><span class="line">int ZOOM = <span class="number">2</span>;<span class="comment">//缩放、旋转模式</span></span><br></pre></td></tr></table></figure></p>
+<p>我们定义三种mode，mode的初始值为NONE，当ACTION_DOWN被触发时mode置为DRAG，当ACTION_POINTER_DOWN被触发时mode置为ZOOM。当ACTION_MOVE被触发时，我们对mode进行判断，针对DRAG和ZOOM两种情况分别进行处理。</p>
+<ol>
+<li>mode == DRAG</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">anchorX = event.getX();</span><br><span class="line">anchorY = event.getY();</span><br><span class="line">moveTag = decalCheck(anchorX, anchorY);</span><br><span class="line">deleteTag = deleteCheck(anchorX, anchorY);</span><br><span class="line"><span class="keyword">if</span> (moveTag != <span class="number">-1</span> &amp;&amp; deleteTag == <span class="number">-1</span>) &#123;</span><br><span class="line">    downMatrix.set(mDecalImageGroupList.get(moveTag).matrix);</span><br><span class="line">    mode = DRAG;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ACTION_DOWN被触发时我们首先将当前触摸点的坐标保存下来以备使用。之后要判断当前触摸点是否在某一个贴纸的Bitmap范围内以及当前触摸点是否在某一个贴纸的删除按钮范围内，我们分别用moveTag和deleteTag来保存结果，当结果为-1时表示没有在任何相关范围内，结果为0~贴纸数量-1时表示在某个贴纸的相关范围内。只有当moveTag ！= -1 &amp;&amp; deleteTag == -1（触摸点某一个贴纸范围内且不在任何删除按钮范围内）时，我们将当前贴纸的Matrix保存到downMatrix中并将mode置成DRAG，若deleteTag不等于-1时，我们在ACTION_UP就将对应的贴纸从贴纸列表中移除。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">moveMatrix.set(downMatrix);</span><br><span class="line">moveMatrix.postTranslate(event.getX() - anchorX, event.getY() - anchorY);<span class="comment">// 平移</span></span><br><span class="line"><span class="keyword">if</span> (moveTag != <span class="number">-1</span>) &#123;</span><br><span class="line">    mDecalImageGroupList.get(moveTag).matrix.set(moveMatrix);</span><br><span class="line">&#125;</span><br><span class="line">invalidate();</span><br></pre></td></tr></table></figure></p>
+<p>进入到ACTION_MOVE阶段，我们首先将downMatrix赋值给moveMatrix，downMatrix是这次手势操作的起始Matrix，之后的变换都是基于downMatrix进行的，所以我们不能直接对downMatrix进行操作，moveMatrix承担了这个责任。DRAG模式下表示当前要进行的是平移操作，而平移的横纵距离是在ACTION_DOWN阶段保存下来的触摸点横纵坐标值与当前移动到的触摸点横纵坐标值的差值。最后将处理好的moveMatrix赋值回该贴纸的Matrix，并调用重绘函数，完成此次贴纸平移操作。因为ACTION_MOVE会在ACTION_UP触发之前一直保持，所以整个平移操作会一直持续，贴纸随着手指移动而移动的效果就出现了。</p>
+<ol>
+<li>mode == ZOOM</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">moveTag = decalCheck(event.getX(<span class="number">0</span>), event.getY(<span class="number">0</span>));</span><br><span class="line">transformTag = decalCheck(event.getX(<span class="number">1</span>), event.getY(<span class="number">1</span>));</span><br><span class="line"><span class="keyword">if</span> (moveTag != <span class="number">-1</span> &amp;&amp; transformTag == moveTag &amp;&amp; deleteTag == <span class="number">-1</span>) &#123;</span><br><span class="line">    downMatrix.set(mDecalImageGroupList.get(moveTag).matrix);</span><br><span class="line">    mode = ZOOM;</span><br><span class="line">&#125;</span><br><span class="line">oldDistance = getDistance(event);</span><br><span class="line">oldRotation = getRotation(event);</span><br><span class="line">midPoint = midPoint(event);</span><br></pre></td></tr></table></figure>
+<p>ACTION_POINTER_DOWN被触发时，我们首先对两个触摸点是否在某个贴纸范围内进行判断，结果分别用moveTag和transformTag进行保存。当moveTag != -1 &amp;&amp; transformTag == moveTag &amp;&amp; deleteTag == -1（两个触摸点在同一个贴纸范围内且不在任何删除按钮范围内）条件满足时，我们将当前贴纸的Matrix保存到downMatrix中并将mode置成ZOOM。同时我们需要将当前两个触摸点之间的距离、中点、角度用oldDistance、midPoint、oldRotation保存起来以备使用。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">moveMatrix.set(downMatrix);</span><br><span class="line">float newRotation = getRotation(event) - oldRotation;</span><br><span class="line">float newDistance = getDistance(event);</span><br><span class="line">float scale = newDistance / oldDistance;</span><br><span class="line">moveMatrix.postScale(scale, scale, midPoint.x, midPoint.y);<span class="comment">// 缩放</span></span><br><span class="line">moveMatrix.postRotate(newRotation, midPoint.x, midPoint.y);<span class="comment">// 旋转</span></span><br><span class="line"><span class="keyword">if</span> (moveTag != <span class="number">-1</span>) &#123;</span><br><span class="line">    mDecalImageGroupList.get(moveTag).matrix.set(moveMatrix);</span><br><span class="line">&#125;</span><br><span class="line">invalidate();</span><br></pre></td></tr></table></figure></p>
+<p>进入到ACTION_MOVE阶段，我们首先将downMatrix赋值给moveMatrix。用当前的两个触摸点算出新的角度，同之前保存的值算出差值newRotation，算出新的距离newDistance并和oldDistance做商，算出缩放比例。分别对moveMatrix进行缩放和旋转操作，处理好后将moveMatrix赋值回该贴纸的Matrix，并调用重绘函数，完成此次贴纸平移操作。因为ACTION_MOVE会在ACTION_UP触发之前一直保持且在ACTION_POINTER_UP触发之前ZOOM模式会一直保持，所以缩放、旋转操作会一直持续，贴纸随着两根手指之间距离变化而变化，角度变化而变化的效果就出现了。</p>
+<h3 id="触摸点判断"><a href="#触摸点判断" class="headerlink" title="触摸点判断"></a>触摸点判断</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected float[] getBitmapPoints(Bitmap bitmap, Matrix matrix) &#123;</span><br><span class="line">    float[] dst = <span class="keyword">new</span> float[<span class="number">8</span>];</span><br><span class="line">    float[] src = <span class="keyword">new</span> float[]&#123;</span><br><span class="line">            <span class="number">0</span>, <span class="number">0</span>,</span><br><span class="line">            bitmap.getWidth(), <span class="number">0</span>,</span><br><span class="line">            <span class="number">0</span>, bitmap.getHeight(),</span><br><span class="line">            bitmap.getWidth(), bitmap.getHeight()</span><br><span class="line">    &#125;;</span><br><span class="line">    matrix.mapPoints(dst, src);</span><br><span class="line">    <span class="keyword">return</span> dst;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">private boolean pointCheck(ImageGroup imageGroup, float x, float y) &#123;</span><br><span class="line">    float[] points = getBitmapPoints(imageGroup);</span><br><span class="line">    float x1 = points[<span class="number">0</span>];</span><br><span class="line">    float y1 = points[<span class="number">1</span>];</span><br><span class="line">    float x2 = points[<span class="number">2</span>];</span><br><span class="line">    float y2 = points[<span class="number">3</span>];</span><br><span class="line">    float x3 = points[<span class="number">4</span>];</span><br><span class="line">    float y3 = points[<span class="number">5</span>];</span><br><span class="line">    float x4 = points[<span class="number">6</span>];</span><br><span class="line">    float y4 = points[<span class="number">7</span>];</span><br><span class="line">    float edge = (float) <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.pow(x1 - x2, <span class="number">2</span>) + <span class="built_in">Math</span>.pow(y1 - y2, <span class="number">2</span>));</span><br><span class="line">    <span class="keyword">if</span> ((<span class="number">2</span> + <span class="built_in">Math</span>.sqrt(<span class="number">2</span>)) * edge &gt;= <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.pow(x - x1, <span class="number">2</span>) + <span class="built_in">Math</span>.pow(y - y1, <span class="number">2</span>))</span><br><span class="line">            + <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.pow(x - x2, <span class="number">2</span>) + <span class="built_in">Math</span>.pow(y - y2, <span class="number">2</span>))</span><br><span class="line">            + <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.pow(x - x3, <span class="number">2</span>) + <span class="built_in">Math</span>.pow(y - y3, <span class="number">2</span>))</span><br><span class="line">            + <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.pow(x - x4, <span class="number">2</span>) + <span class="built_in">Math</span>.pow(y - y4, <span class="number">2</span>))) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private boolean circleCheck(ImageGroup imageGroup, float x, float y) &#123;</span><br><span class="line">    float[] points = getBitmapPoints(imageGroup);</span><br><span class="line">    float x2 = points[<span class="number">2</span>];</span><br><span class="line">    float y2 = points[<span class="number">3</span>];</span><br><span class="line">    int checkDis = (int) <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.pow(x - x2, <span class="number">2</span>) + <span class="built_in">Math</span>.pow(y - y2, <span class="number">2</span>));</span><br><span class="line">    <span class="keyword">if</span> (checkDis &lt; <span class="number">40</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在整个手势操作流程中我们需要多次使用触摸点判断，不论是判断是否在贴纸范围还是删除按钮范围。Matrix提供了map开头的映射方法，其中的mapPoints(float[] dst, float[] src)可以将src坐标数组根据Matrix映射到dst。使用Matrix来存储Bitmap的绘制信息，Bitmap默认的绘制起点（左上角点）为（0，0），因此默认情况下Bitmap四个点的坐标为（0，0）、（bitmap.getWidth(), 0）、（0, bitmap.getHeight()）、（bitmap.getWidth(), bitmap.getHeight()），依此我们可以映射出当前Bitmap四个点的坐标。我们的贴纸在整个流程任何操作下都是正方形，因此我们可以使用已知正方形四个顶点来判断第五点是否在正方形范围内，算法是第五点到四顶点的距离是否小于等于2√2倍的边长。这个算法对长方形适不适用我没有验证，如果要添加非正方形Bitmap的话需要自行优化此处。判断点是否在一个圆的范围内很简单，只要将该点到圆心的距离和半径进行比较即可。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>整个Android贴纸的简单实现思路就行这样，完整代码链接如下，有需要的童鞋可以搞下来看看，有什么问题或者好点子欢迎交流。<br>代码地址：<a href="https://github.com/JunyiZhou/AndroidExercises/tree/master/ImageHandleDemo" target="_blank" rel="external">https://github.com/JunyiZhou/AndroidExercises/tree/master/ImageHandleDemo</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/贴纸/" rel="tag">#贴纸</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/16/Android图像处理之Matrix/" rel="next" title="Android图像处理之Matrix">
+                <i class="fa fa-chevron-left"></i> Android图像处理之Matrix
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/04/07/Android-贴纸/"
+           data-title="Android 贴纸" data-url="http://yoursite.com/2016/04/07/Android-贴纸/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="JunyiZhou" />
+          <p class="site-author-name" itemprop="name">JunyiZhou</p>
+          <p class="site-description motion-element" itemprop="description">陷阵之志，有死无生</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JunyiZhou" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JunYZhou" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 新浪微博
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+                <a href="/CurriculumVitae" target="_blank">个人简历</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/" target="_blank">GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://gold.xitu.io/#/" target="_blank">稀土掘金</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/" target="_blank">简书</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手势操作"><span class="nav-number">2.</span> <span class="nav-text">手势操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#触摸点判断"><span class="nav-number">3.</span> <span class="nav-text">触摸点判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JunyiZhou</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.scheme !== 'Pisces' && (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always')) {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"junyizhou"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+  
+
+
+</body>
+</html>
